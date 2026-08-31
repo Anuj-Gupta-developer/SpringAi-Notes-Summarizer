@@ -177,6 +177,4 @@ Client (Postman/Frontend)
 
 ---
 
-## What to Tell an Interviewer
 
-> "I built a Spring Boot API where users can register, log in, and summarize text or PDFs using an AI model via Spring AI — everything's secured with JWT, and summaries are saved per-user in MySQL. I deliberately used Spring AI's stable 1.1 release instead of the newer 2.0 release candidate, since it's built on Spring Boot 4 which is still maturing — I wanted something I could fully understand and defend rather than the newest version for its own sake."
