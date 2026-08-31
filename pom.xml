@@ -74,6 +74,12 @@
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
+             <!-- PostgreSQL driver — used in production (Render's free managed Postgres) -->
+        <dependency>
+           <groupId>org.postgresql</groupId>
+           <artifactId>postgresql</artifactId>
+           <scope>runtime</scope>
+         </dependency>
 
         <!--
             JJWT — split into 3 modules:
