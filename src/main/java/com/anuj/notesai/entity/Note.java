@@ -27,7 +27,7 @@ public class Note {
     private User user;
 
     @Lob
-    @Column(nullable = false, columnDefinition = "LONGTEXT")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String originalText;
 
     @Lob
