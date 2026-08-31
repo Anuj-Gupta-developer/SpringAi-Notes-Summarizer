@@ -6,10 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-/**
- * Consistent error response body returned by all API error handlers.
- * Ensures every error follows the same JSON structure for frontend consumption.
- */
+// standard error response shape for all API errors
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

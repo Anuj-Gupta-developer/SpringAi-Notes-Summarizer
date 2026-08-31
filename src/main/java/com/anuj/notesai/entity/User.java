@@ -11,10 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * User entity — implements {@link UserDetails} so Spring Security can work
- * directly with our JPA entity for authentication and authorization.
- */
+// User entity — implements UserDetails so Spring Security can use it directly
 @Entity
 @Table(name = "users")
 @Data
@@ -29,7 +26,7 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true, length = 50)
     private String username;
 
-    /** BCrypt-hashed password — plain-text passwords are never stored. */
+    // storing the bcrypt hash, not the raw password
     @Column(nullable = false)
     private String passwordHash;
 

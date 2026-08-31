@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/** Response returned after successful authentication, containing a JWT token. */
+// returned after login/register — contains the JWT token
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

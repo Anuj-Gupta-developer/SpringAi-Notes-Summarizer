@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/** Request body for user registration with validation constraints. */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

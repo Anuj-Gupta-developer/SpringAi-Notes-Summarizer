@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/** Request body for user login. */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

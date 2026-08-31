@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/** Request body for creating a note from pasted text. */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

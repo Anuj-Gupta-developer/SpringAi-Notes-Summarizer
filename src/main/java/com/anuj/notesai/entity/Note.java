@@ -9,13 +9,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Note entity — stores a user's note along with its AI-generated summary and key points.
- *
- * Key points are stored in a separate join table (note_key_points) via @ElementCollection,
- * which is the right JPA tool for persisting a collection of value types without creating
- * a full child entity.
- */
+// stores a note with its AI-generated summary and key points
 @Entity
 @Table(name = "notes")
 @Data
@@ -27,6 +21,7 @@ public class Note {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // each note belongs to one user
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -39,6 +34,7 @@ public class Note {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String summary;
 
+    // key points go into a separate table (note_key_points) via @ElementCollection
     @ElementCollection
     @CollectionTable(
             name = "note_key_points",

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/** Response containing the AI's answer to a question about a note. */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/** Request body for asking a question about a specific note. */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

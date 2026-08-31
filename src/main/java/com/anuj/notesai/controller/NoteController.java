@@ -19,43 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-/**
- * NoteController — REST endpoints for creating, viewing, and deleting notes.
- *
- * ============================================================
- *  HOW DO WE KNOW WHICH USER IS MAKING THE REQUEST?
- * ============================================================
- * After the JwtAuthenticationFilter validates the token and sets the
- * SecurityContext, we can access the authenticated user in two ways:
- *
- * Option 1: SecurityContextHolder (manual, verbose)
- *   Authentication auth = SecurityContextHolder.getContext().getAuthentication();
- *   User user = (User) auth.getPrincipal();
- *
- * Option 2: @AuthenticationPrincipal (annotation, clean) ← WE USE THIS
- *   public ResponseEntity<?> method(@AuthenticationPrincipal User user) {
- *       // 'user' is automatically injected by Spring Security
- *   }
- *
- * @AuthenticationPrincipal extracts the principal (our User entity) from
- * the SecurityContext and injects it directly as a method parameter.
- * Much cleaner than the manual approach!
- *
- * INTERVIEW TIP: "I use @AuthenticationPrincipal to inject the authenticated
- * user directly into controller methods. This is cleaner than manually
- * accessing the SecurityContext, and Spring handles the injection automatically."
- *
- * ============================================================
- *  HTTP STATUS CODES USED
- * ============================================================
- *   200 OK         → successful GET, login
- *   201 Created    → successful POST (note created)
- *   204 No Content → successful DELETE (nothing to return)
- *   400 Bad Request → validation failed
- *   401 Unauthorized → missing/invalid JWT
- *   404 Not Found  → note doesn't exist or belongs to another user
- *   500 Internal Server Error → unexpected errors
- */
 @RestController
 @RequestMapping("/api/notes")
 @Tag(name = "Notes", description = "Create, view, and manage AI-summarized notes")
@@ -75,22 +38,7 @@ public class NoteController {
         this.aiSummaryService = aiSummaryService;
     }
 
-    // ================================================================
-    //  CREATE NOTE FROM TEXT (Stage 1 + 2)
-    // ================================================================
-
-    /**
-     * Create a new note by summarizing pasted text.
-     *
-     * Request:  POST /api/notes
-     * Header:   Authorization: Bearer <JWT_TOKEN>
-     * Body:     { "text": "Spring Boot is a framework that..." }
-     * Response: { "id": 1, "summary": "...", "keyPoints": [...], ... }
-     * Status:   201 Created
-     *
-     * @param user    the authenticated user (injected by Spring Security)
-     * @param request the request body containing the text to summarize
-     */
+    // POST /api/notes — create note from pasted text
     @PostMapping
     @Operation(
             summary = "Create note from text",
@@ -104,29 +52,7 @@ public class NoteController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    // ================================================================
-    //  CREATE NOTE FROM PDF UPLOAD (Stage 3)
-    // ================================================================
-
-    /**
-     * Create a new note by uploading a PDF file.
-     *
-     * Request:  POST /api/notes/upload
-     * Header:   Authorization: Bearer <JWT_TOKEN>
-     * Body:     multipart/form-data with a "file" field containing the PDF
-     * Response: { "id": 2, "summary": "...", "keyPoints": [...], ... }
-     * Status:   201 Created
-     *
-     * In Postman:
-     *   - Method: POST
-     *   - URL: http://localhost:8080/api/notes/upload
-     *   - Body tab → form-data
-     *   - Key: "file" (type: File) → select your PDF
-     *   - Headers tab → Authorization: Bearer <your_token>
-     *
-     * consumes = MediaType.MULTIPART_FORM_DATA_VALUE tells Spring this
-     * endpoint accepts file uploads (not JSON).
-     */
+    // POST /api/notes/upload — create note from PDF file
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
             summary = "Create note from PDF upload",
@@ -140,21 +66,7 @@ public class NoteController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    // ================================================================
-    //  LIST ALL NOTES (Stage 2)
-    // ================================================================
-
-    /**
-     * Get all notes belonging to the authenticated user.
-     *
-     * Request:  GET /api/notes
-     * Header:   Authorization: Bearer <JWT_TOKEN>
-     * Response: [{ "id": 1, ... }, { "id": 2, ... }]
-     * Status:   200 OK
-     *
-     * Notes are ordered by creation date (newest first).
-     * Only returns notes belonging to the authenticated user.
-     */
+    // GET /api/notes — list all notes for the logged-in user
     @GetMapping
     @Operation(
             summary = "List all notes",
@@ -167,21 +79,7 @@ public class NoteController {
         return ResponseEntity.ok(notes);
     }
 
-    // ================================================================
-    //  GET ONE NOTE (Stage 2)
-    // ================================================================
-
-    /**
-     * Get a specific note by its ID.
-     *
-     * Request:  GET /api/notes/5
-     * Header:   Authorization: Bearer <JWT_TOKEN>
-     * Response: { "id": 5, "summary": "...", "keyPoints": [...], ... }
-     * Status:   200 OK  or  404 Not Found
-     *
-     * @PathVariable extracts the {id} from the URL path.
-     * The note must belong to the authenticated user (checked in NoteService).
-     */
+    // GET /api/notes/{id}
     @GetMapping("/{id}")
     @Operation(
             summary = "Get note by ID",
@@ -195,21 +93,7 @@ public class NoteController {
         return ResponseEntity.ok(note);
     }
 
-    // ================================================================
-    //  DELETE NOTE (Stage 2)
-    // ================================================================
-
-    /**
-     * Delete a note by its ID.
-     *
-     * Request:  DELETE /api/notes/5
-     * Header:   Authorization: Bearer <JWT_TOKEN>
-     * Response: (empty body)
-     * Status:   204 No Content  or  404 Not Found
-     *
-     * 204 No Content is the standard HTTP status for successful deletion
-     * where there's nothing meaningful to return in the response body.
-     */
+    // DELETE /api/notes/{id}
     @DeleteMapping("/{id}")
     @Operation(
             summary = "Delete note",
@@ -220,30 +104,11 @@ public class NoteController {
             @PathVariable Long id
     ) {
         noteService.deleteNote(id, user.getId());
-        return ResponseEntity.noContent().build(); // 204 No Content
+        return ResponseEntity.noContent().build();
     }
 
-    // ================================================================
-    //  ASK A QUESTION ABOUT A NOTE (Stage 4 — Stretch Goal)
-    // ================================================================
-
-    /**
-     * Ask a question about a specific note using AI.
-     *
-     * Request:  POST /api/notes/5/ask
-     * Header:   Authorization: Bearer <JWT_TOKEN>
-     * Body:     { "question": "What are the main benefits mentioned?" }
-     * Response: { "noteId": 5, "question": "...", "answer": "..." }
-     * Status:   200 OK
-     *
-     * The AI uses the note's original text as context to answer the question.
-     * This is a basic form of RAG (Retrieval-Augmented Generation) without
-     * needing a vector database — we simply pass the full note text.
-     *
-     * INTERVIEW TIP: "The ask endpoint demonstrates a simple RAG pattern.
-     * I pass the note's text as context along with the question, so the AI
-     * answers based only on that specific note — no hallucination."
-     */
+    // POST /api/notes/{id}/ask — ask a question about a specific note
+    // the AI uses the note's text as context to answer
     @PostMapping("/{id}/ask")
     @Operation(
             summary = "Ask a question about a note",
@@ -254,13 +119,11 @@ public class NoteController {
             @PathVariable Long id,
             @Valid @RequestBody AskRequest request
     ) {
-        // First, verify the note exists and belongs to this user
         Note note = noteRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Note not found with id: " + id
                 ));
 
-        // Send the note's text + question to the AI
         String answer = aiSummaryService.answerQuestion(
                 note.getOriginalText(),
                 request.getQuestion()

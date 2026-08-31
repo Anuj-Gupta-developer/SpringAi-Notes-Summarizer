@@ -7,14 +7,12 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Data access layer for notes. All queries are user-scoped to prevent
- * unauthorized access to other users' notes (application-level row security).
- */
 @Repository
 public interface NoteRepository extends JpaRepository<Note, Long> {
 
+    // get all notes for a user, newest first
     List<Note> findByUserIdOrderByCreatedAtDesc(Long userId);
 
+    // find a note only if it belongs to the given user (prevents accessing other users' notes)
     Optional<Note> findByIdAndUserId(Long id, Long userId);
 }

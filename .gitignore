@@ -1,44 +1,43 @@
-# ==================== Compiled Output ====================
+# compiled output
 target/
 *.class
 
-# ==================== Maven ====================
+# maven wrapper
 .mvn/
 mvnw
 mvnw.cmd
 
-# ==================== IDE — IntelliJ IDEA ====================
+# IntelliJ
 .idea/
 *.iml
 *.iws
 *.ipr
 
-# ==================== IDE — VS Code ====================
+# VS Code
 .vscode/
 
-# ==================== IDE — Eclipse ====================
+# Eclipse
 .classpath
 .project
 .settings/
 
-# ==================== OS Files ====================
+# OS files
 .DS_Store
 Thumbs.db
 
-# ==================== Environment / Secrets ====================
-# NEVER commit API keys or secrets to Git!
+# secrets — never commit these
 .env
 *.env
 application-local.properties
 
-# ==================== Logs ====================
+# logs
 *.log
 logs/
 
-# ==================== Uploaded Files ====================
+# uploads
 uploads/
 
-# ==================== AI/Planning Files ====================
+# planning/documentation files
 DOCUMENTATION.md
 walkthrough.md
 implementation_plan.md

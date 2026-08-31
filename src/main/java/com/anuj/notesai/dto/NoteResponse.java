@@ -9,10 +9,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Response DTO for note data. Keeps the User entity out of the API response
- * to avoid exposing sensitive fields like passwordHash.
- */
+// DTO so we don't expose User's passwordHash in API responses
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,7 +22,6 @@ public class NoteResponse {
     private SourceType sourceType;
     private LocalDateTime createdAt;
 
-    /** Converts a Note entity to a safe-to-return DTO. */
     public static NoteResponse fromEntity(Note note) {
         NoteResponse response = new NoteResponse();
         response.setId(note.getId());
