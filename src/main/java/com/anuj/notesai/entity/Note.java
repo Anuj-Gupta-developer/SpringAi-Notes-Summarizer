@@ -26,11 +26,11 @@ public class Note {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Lob
+    
     @Column(nullable = false, columnDefinition = "TEXT")
     private String originalText;
 
-    @Lob
+    
     @Column(nullable = false, columnDefinition = "TEXT")
     private String summary;
 
