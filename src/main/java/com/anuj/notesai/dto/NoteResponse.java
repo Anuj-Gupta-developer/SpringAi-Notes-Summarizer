@@ -1,5 +1,6 @@
 package com.anuj.notesai.dto;
 
+import java.util.ArrayList;
 import com.anuj.notesai.entity.Note;
 import com.anuj.notesai.entity.SourceType;
 import lombok.AllArgsConstructor;
@@ -27,7 +28,7 @@ public class NoteResponse {
         response.setId(note.getId());
         response.setOriginalText(note.getOriginalText());
         response.setSummary(note.getSummary());
-        response.setKeyPoints(note.getKeyPoints());
+        response.setKeyPoints(new ArrayList<>(note.getKeyPoints()));
         response.setSourceType(note.getSourceType());
         response.setCreatedAt(note.getCreatedAt());
         return response;
